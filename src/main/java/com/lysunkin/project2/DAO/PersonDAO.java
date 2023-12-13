@@ -16,11 +16,13 @@ import java.util.Optional;
 public class PersonDAO {
     private final SessionFactory sessionFactory;
 
+    @Transactional(readOnly = true)
     public List<Person> findAll() {
         Session session = sessionFactory.getCurrentSession();
         return session.createQuery("from Person", Person.class).getResultList();
     }
 
+    @Transactional(readOnly = true)
     public Person findById(int person_id) {
         Session session = sessionFactory.getCurrentSession();
         return session.get(Person.class, person_id);
@@ -35,7 +37,9 @@ public class PersonDAO {
     @Transactional
     public void update(Person person) {
         Session session = sessionFactory.getCurrentSession();
-        session.persist(person);
+        Person personToBeUpdated = session.get(Person.class, person.getPerson_id());
+        personToBeUpdated.setPerson_name(person.getPerson_name());
+        personToBeUpdated.setBirthday(person.getBirthday());
     }
 
     @Transactional
@@ -48,8 +52,7 @@ public class PersonDAO {
 
     public Optional<Person> findByName(String name) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Person> query = session.createQuery("FROM Person WHERE person_name=:name", Person.class);
-        query.setParameter("name", name);
-        return Optional.ofNullable(query.getSingleResult());
+        Query<Person> query = session.createQuery("FROM Person WHERE person_name=:name", Person.class).setParameter("name", name);
+        return Optional.ofNullable(query.getSingleResultOrNull());
     }
 }

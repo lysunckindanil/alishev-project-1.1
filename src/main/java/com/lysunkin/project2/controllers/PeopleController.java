@@ -55,15 +55,12 @@ public class PeopleController {
     }
 
     @PostMapping("/{id}/edit")
-    public String editPersonPost(@PathVariable int id, @ModelAttribute @Valid Person person, BindingResult bindingResult) {
+    public String editPersonPost(@ModelAttribute @Valid Person person, BindingResult bindingResult, @PathVariable String id) {
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors()) {
             return "people/edit";
         }
-        Person person_original = personDAO.findById(id);
-        person_original.setPerson_name(person.getPerson_name());
-        person_original.setBirthday(person.getBirthday());
-        personDAO.update(person_original);
+        personDAO.update(person);
         return "redirect:/people";
     }
 

@@ -61,11 +61,7 @@ public class BookController {
         if (bindingResult.hasErrors()) {
             return "books/edit";
         }
-        Book book_original = bookDAO.findById(id);
-        book_original.setBook_name(book.getBook_name());
-        book_original.setAuthor(book.getAuthor());
-        book_original.setYear(book.getYear());
-        bookDAO.update(book_original);
+        bookDAO.update(book);
         return "redirect:/books";
     }
 

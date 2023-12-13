@@ -39,7 +39,10 @@ public class BookDAO {
     @Transactional
     public void update(Book book) {
         Session session = sessionFactory.getCurrentSession();
-        session.persist(book);
+        Book bookToBeUpdated = session.get(Book.class, book.getBook_id());
+        bookToBeUpdated.setBook_name(book.getBook_name());
+        bookToBeUpdated.setAuthor(book.getAuthor());
+        bookToBeUpdated.setYear(book.getYear());
     }
 
     @Transactional
